@@ -34,7 +34,7 @@ public class OrderService {
 
     // Self-invocation demonstration.
     // Call /api/orders/self-invocation and observe that the internal
-    // method call does not go through the Spring proxy again.
+    // method call does not go through the Spring proxy again -meaning non of advice will be executed for methodB() when called from methodA().
     public String methodA() {
         System.out.println(">>> Inside methodA()");
         return methodB();
@@ -44,4 +44,28 @@ public class OrderService {
         System.out.println(">>> Inside methodB()");
         return "methodB completed";
     }
+
+
+    public String checkReturnPolicyOfOrder(String productType) throws InterruptedException {
+    System.out.println(">>> Inside OrderService.checkReturnPolicyOfOrder()");
+
+    if (productType == null || productType.trim().isEmpty()) {
+        throw new RuntimeException("Product type is required");
+    }
+
+    String type = productType.trim().toLowerCase();
+
+    boolean isInnerGarment = (type.contains("inner") && type.contains("garment"))
+            || type.contains("innerwear")
+            || type.contains("underwear")
+            || type.contains("brief")
+            || type.contains("lingerie");
+
+    if (isInnerGarment) {
+        throw new IllegalStateException("Return policy not applicable for inner garments: " + productType);
+    }
+    Thread.sleep(2000); // Simulate a slow operation
+
+    return "Return policy for product " + productType + ": 30 days return policy.";
+}
 }

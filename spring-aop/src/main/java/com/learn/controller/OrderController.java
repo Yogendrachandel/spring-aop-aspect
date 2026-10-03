@@ -48,6 +48,12 @@ public class OrderController {
         return orderService.slowOperation();
     }
 
+
+    @GetMapping("/api/orders/check-return-policy")
+    public String checkReturnPolicy(@RequestParam String productType) throws InterruptedException {
+        return orderService.checkReturnPolicyOfOrder(productType);
+    }
+
     // Test:
     // GET http://localhost:8080/api/orders/self-invocation
     @GetMapping("/api/orders/self-invocation")

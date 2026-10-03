@@ -97,6 +97,31 @@ public class LoggingAspectV2 {
         return result;
     }
 
+    //another example of  @Around advice
+
+    @Around("execution(* com.learn.service.OrderService.checkReturnPolicyOfOrder(..))")
+    public Object aroundAdviceForCheckReturnPolicy(ProceedingJoinPoint joinPoint) throws Throwable {
+        System.out.println("=========== @Around: BEFORE target ===========");
+        long start = System.currentTimeMillis();
+        Object result;
+
+        try {
+            // IMPORTANT:
+            // This executes the actual service method.
+            result = joinPoint.proceed();
+        } catch (Throwable ex) {
+            System.out.println("=========== @Around caught exception ===========");
+            System.out.println("Exception: " + ex.getMessage());
+            throw ex; // Re-throw so normal exception flow continues.
+        }
+
+        long end = System.currentTimeMillis();
+
+        System.out.println("=========== @Around: AFTER target =============");
+        System.out.println("Execution time: " + (end - start) + " ms");
+        System.out.println("================================================");
+        return result;
+    }
 
     @Before("within(com.learn.service.OrderService)")//pointcut expression for within Class , we can use for package also like within(com.learn.service..*) for all classes in the package
     public void logBeforeWithin() {
